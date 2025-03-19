@@ -3,7 +3,7 @@
 // @namespace    https://github.com/lns103/DoubanOriginalPic
 // @version      1.0
 // @license      MIT
-// @description  访问 *.doubanio.com 的图片时，自动跳转到 img9.doubanio.com 原图，并支持点击放大/缩小
+// @description  访问 *.doubanio.com 的图片时，自动重加载原图，并支持点击放大/缩小
 // @match        https://*.doubanio.com/view/photo/*/public/*
 // @grant        GM_xmlhttpRequest
 // @connect      img9.doubanio.com
