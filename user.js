@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         豆瓣原图重定向加载
-// @namespace    http://github.com/lns103
+// @namespace    https://github.com/lns103/DoubanOriginalPic
 // @version      1.0
 // @license      MIT
 // @description  访问 *.doubanio.com 的图片时，自动跳转到 img9.doubanio.com 原图，并支持点击放大/缩小
