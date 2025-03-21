@@ -37,15 +37,15 @@
                 const img = document.createElement("img");
                 img.src = blobUrl;
                 img.style.maxWidth = "100%";
-                img.style.maxHeight = "100vh"; // 限制高度适应窗口
+                img.style.maxHeight = "100%";
                 img.style.display = "block";
                 img.style.margin = "auto";
-                img.style.cursor = "zoom-in"; // 初始状态为放大
 
                 // 变量：控制缩放
                 let scale = 1;
                 let originalWidth, originalHeight;
                 let isLoaded = false;
+                let canZoom = true;
 
                 // 监听图片加载完成，获取原始尺寸
                 img.onload = function() {
@@ -55,27 +55,31 @@
 
                     // 更新下载按钮的文本，添加分辨率和大小
                     downloadLink.textContent = `⬇ 下载原图（${originalWidth} x ${originalHeight}, ${fileSizeMB}MB）`;
-
+                    checkZoomAvailability();
                     isLoaded = true;
                 };
 
                 // 监听点击，放大/缩小到鼠标位置
                 img.onclick = function(event) {
                     if (!isLoaded) return;
+                    if (!canZoom) return;
 
                     const rect = img.getBoundingClientRect();
                     const ratioX = (event.clientX - rect.left) / rect.width;
                     const ratioY = (event.clientY - rect.top) / rect.height;
 
                     if (scale === 1) {
-                        scale = Math.min(3, window.innerWidth / img.clientWidth); // 放大到 3 倍或最大适应宽度
-                        img.style.maxWidth = `${originalWidth * scale}px`;
-                        img.style.maxHeight = `${originalHeight * scale}px`;
+                        // scale = Math.min(3, originalWidth / window.innerWidth); // 放大到 3 倍或最大适应宽度
+                        // img.style.maxWidth = `${window.innerWidth * scale}px`;
+                        // img.style.maxHeight = `${window.innerWidth * scale}px`;
+                        scale = 2;
+                        img.style.maxWidth = `${originalWidth}px`;
+                        img.style.maxHeight = `${originalHeight}px`;
                         img.style.cursor = "zoom-out"; // 变为缩小样式
                     } else {
                         scale = 1;
                         img.style.maxWidth = "100%";
-                        img.style.maxHeight = "100vh";
+                        img.style.maxHeight = "100%";
                         img.style.cursor = "zoom-in"; // 变为放大样式
                     }
 
@@ -92,6 +96,21 @@
 
                     window.scrollTo(scrollX, scrollY);
                 }
+
+                function checkZoomAvailability() {
+                    canZoom = !(window.innerWidth > originalWidth && window.innerHeight > originalHeight);
+                    if (!canZoom) {
+                        img.style.cursor = "default";
+                    } else {
+                        if (img.clientWidth > window.innerWidth) {
+                            img.style.cursor = "zoom-out";
+                        } else {
+                            img.style.cursor = "zoom-in";
+                        }
+                    }
+                }
+
+                window.addEventListener('resize', checkZoomAvailability);
 
                 // 下载按钮
                 const downloadLink = document.createElement("a");
